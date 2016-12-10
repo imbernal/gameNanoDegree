@@ -15,8 +15,11 @@ var Enemy = function(x,y,speed) {
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
 Enemy.prototype.update = function(dt) {
-    this.x += this.speed*dt;
-    //this.y +=  dt;
+    if(this.x > 506){
+      this.x -=500;
+    }else
+      this.x += this.speed*dt;
+    //this.y += dt;
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
@@ -27,7 +30,7 @@ Enemy.prototype.render = function(ctx) {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
-// Now write your own player class
+// Now  write your own player class
 // This class requires an update(), render() and
 // a handleInput() method.
 
@@ -69,7 +72,7 @@ class Player{
     }
 
     if (keyCode == "up") {
-      
+
       if( this.y ==  60 )
         this.y = 300;
       else
@@ -89,7 +92,8 @@ var player = new Player(100,300,"isra" );
 var allEnemies = [];
 
 allEnemies.push(new Enemy(50,60 , Math.floor(Math.random() * (100 -40) + 40)));
-allEnemies.push(new Enemy(80,130, Math.floor(Math.random() * (100 -40) + 40)));
+allEnemies.push(new Enemy(80,140, Math.floor(Math.random() * (100 -40) + 40)));
+allEnemies.push(new Enemy(80,230, Math.floor(Math.random() * (100 -40) + 40)));
 
 
 
