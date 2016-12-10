@@ -1,0 +1,24 @@
+{
+  "name": "frontend-nanodegree-arcade-game",
+  "version": "1.0.0",
+  "description": "frontend-nanodegree-arcade-game\r ===============================",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "watch-js": "watchify js/engine.js -o js/bundle.js --poll -v"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/imbernal/frontend-nanodegree-arcade-game.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/imbernal/frontend-nanodegree-arcade-game/issues"
+  },
+  "homepage": "https://github.com/imbernal/frontend-nanodegree-arcade-game#readme",
+  "dependencies": {
+    "babelify": "^7.3.0",
+    "watchify": "^3.7.0"
+  }
+}
