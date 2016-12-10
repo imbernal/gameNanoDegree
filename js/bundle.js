@@ -66,14 +66,15 @@ class Player{
     if (keyCode == "down") {
 
       if(this.y + 100 <= 410)
-        this.y +=100;
+        this.y +=80;
     }
 
     if (keyCode == "up") {
-      if( this.y == 10  )
-        this.y = 310;
+      
+      if( this.y ==  60 )
+        this.y = 300;
       else
-        this.y-=60;
+        this.y-=80;
     }
 
   }
