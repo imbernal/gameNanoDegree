@@ -1,9 +1,11 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 // Enemies our player must avoid
-var Enemy = function(x,y,speed) {
+var Enemy = function(x,y,speed , enemyWith , enemyHeigth) {
     this.x = x;
     this.y = y;
     this.speed = speed;
+    this.with = enemyWith;
+    this.height = enemyHeigth;
 
     // Variables applied to each of our instances go here,
     // we've provided one for you to get started
@@ -28,63 +30,128 @@ Enemy.prototype.update = function(dt) {
 
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function(ctx) {
-    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+    ctx.drawImage(Resources.get(this.sprite), this.x-this.with, this.y-this.height);
 };
 
 // Now  write your own player class
 // This class requires an update(), render() and
 // a handleInput() method.
 
-class Player{
-  constructor(x,y,name){
+class Gem{
+  constructor(x,y ,sprite , gemWith , gemHeigth){
     this.x = x;
     this.y = y;
+    this.sprite = sprite;
+    this.with  = gemWith;
+    this.height = gemHeigth;
+  }
+
+  render(ctx){
+    ctx.drawImage(Resources.get(this.sprite), this.x - 52, this.y-118);
+  }
+
+
+
+
+
+}
+
+class Player{
+  constructor(x,y,name , playerWith , playerHeight){
+    this.x = x;
+    this.y = y;
+    this.score = 0;
+    this.with = playerWith;
+    this.height = playerHeight;
 
     this.name = "Isra";
     this.sprite = "images/char-boy.png";
   }
 
   update(dt){
-    // this.x +=dt;
-    // this.y += dt;
+
   }
 
+
   render(ctx){
-    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+    ctx.drawImage(Resources.get(this.sprite), this.x-this.with, this.y-this.height);
+  }
+
+  collision(allEnemies){
+      var result = 0;
+      allEnemies.forEach(function(enemy){
+        result = Math.sqrt( Math.pow((player.x-player.with) - (enemy.x-enemy.with) , 2) + Math.pow((player.y-player.height) - (enemy.y - enemy.height) ,2));
+
+        if(result < 60){
+          player.y = 430;
+          player.x = 150;
+          player.score = 0;
+          document.getElementById('score').innerHTML = "Score:0";
+        }
+
+
+      });
+    }
+
+      gemCollision(gemies){
+        var result = 0;
+        gemies.forEach(function(gem,item){
+          result = Math.sqrt( Math.pow((player.x-player.with) - (gem.x-gem.with) , 2) + Math.pow((player.y-player.height) - (gem.y - gem.height) ,2));
+
+          if(result < 60){
+            player.score +=1;
+            document.getElementById("score").innerHTML = "Score:"+player.score;
+            gemies.splice(item, 1);
+          }
+
+        });
   }
 
   handleInput(keyCode){
 
     if(keyCode == "left") {
-      if(this.x - 100 >= 0)
+
+      if(this.x - 100 >= 50)
         this.x -= 100;
     }
 
     if (keyCode == "right") {
 
-      if(this.x+100 <= 400)
+      if(this.x+100 <= 450)
         this.x += 100;
     }
 
     if (keyCode == "down") {
 
-      if(this.y + 100 <= 410)
+      if(this.y + 100 <= 530)
         this.y +=80;
     }
 
     if (keyCode == "up") {
 
-      if( this.y ==  60 )
-        this.y = 300;
+      if( this.y ==  190 ){
+        this.y = 430;
+        this.x = 150;
+      }
       else
         this.y-=80;
     }
+
+
 
   }
 
 }
 
-var player = new Player(100,300,"isra" );
+var gemies = [];
+
+var imagesGem = ["images/Gem_Green.png" , "images/Gem Orange.png" , "images/Gem Blue.png"];
+
+gemies.push(new Gem((80)*Math.floor((Math.random() * 5)+1),(170)*Math.floor((Math.random() * 3)+1),imagesGem[Math.floor((Math.random() *2)+1)], 52 , 118) );
+gemies.push(new Gem((80)*Math.floor((Math.random() * 5)+1),(170)*Math.floor((Math.random() * 3)+1),imagesGem[Math.floor((Math.random() *2)+1)], 52 , 118) );
+gemies.push(new Gem((80)*Math.floor((Math.random() * 5)+1),(170)*Math.floor((Math.random() * 3)+1),imagesGem[Math.floor((Math.random() *2)+1)], 52 , 118) );
+
+var player = new Player(150,430,"isra" , 52 , 118);
 
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
@@ -92,10 +159,9 @@ var player = new Player(100,300,"isra" );
 
 var allEnemies = [];
 
-allEnemies.push(new Enemy(50,60 , Math.floor(Math.random() * (100 -40) + 40)));
-allEnemies.push(new Enemy(80,140, Math.floor(Math.random() * (100 -40) + 40)));
-allEnemies.push(new Enemy(80,230, Math.floor(Math.random() * (100 -40) + 40)));
-
+allEnemies.push(new Enemy(100,170 , Math.floor(Math.random() * (100 -40) + 40 ), 51 , 115));
+allEnemies.push(new Enemy(200,250, Math.floor(Math.random() * (100 -40) + 40), 51 , 115));
+allEnemies.push(new Enemy(300,340, Math.floor(Math.random() * (100 -40) + 40), 51 , 115));
 
 
 // This listens for key presses and sends the keys to your
@@ -112,13 +178,14 @@ document.addEventListener('keyup', function(e) {
 });
 
 module.exports = {
-  player:player,allEnemies:allEnemies
+  player:player,allEnemies:allEnemies , gemies:gemies , gem:Gem
 };
 
 },{}],2:[function(require,module,exports){
 const player = require('./app.js').player;
 const allEnemies = require('./app.js').allEnemies;
-
+const gemies = require('./app.js').gemies;
+const gem = require('./app.js').gem;
 /* Engine.js
  * This file provides the game loop functionality (update entities and render),
  * draws the initial game board on the screen, and then calls the update and
@@ -149,6 +216,7 @@ var Engine = (function(global) {
 
     canvas.width = 505;
     canvas.height = 606;
+
     doc.body.appendChild(canvas);
 
     /* This function serves as the kickoff point for the game loop itself
@@ -212,11 +280,21 @@ var Engine = (function(global) {
      * the data/properties related to the object. Do your drawing in your
      * render methods.
      */
+    var imagesGem = ["images/Gem_Green.png" , "images/Gem Orange.png" , "images/Gem Blue.png"];
     function updateEntities(dt) {
         allEnemies.forEach(function(enemy) {
             enemy.update(dt);
         });
         player.update(dt);
+
+        player.collision(allEnemies);
+        player.gemCollision(gemies);
+
+        if (gemies.length <3) {
+
+          gemies.push(new gem((80)*Math.floor((Math.random() * 5)+1),(170)*Math.floor((Math.random() * 3)+1),imagesGem[Math.floor((Math.random() *2)+1)], 52 , 118) );
+
+        }
     }
 
     /* This function initially draws the "game level", it will then call
@@ -274,6 +352,10 @@ var Engine = (function(global) {
         });
 
         player.render(ctx);
+        gemies.forEach(function(gem){
+          gem.render(ctx);
+        });
+        // gem.render(ctx);
     }
 
     /* This function does nothing but it could have been a good place to
@@ -293,7 +375,10 @@ var Engine = (function(global) {
         'images/water-block.png',
         'images/grass-block.png',
         'images/enemy-bug.png',
-        'images/char-boy.png'
+        'images/char-boy.png',
+        'images/Gem_Green.png',
+        'images/Gem Orange.png',
+        'images/Gem Blue.png'
     ]);
     Resources.onReady(init);
 

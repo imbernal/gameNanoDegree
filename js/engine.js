@@ -1,6 +1,7 @@
 const player = require('./app.js').player;
 const allEnemies = require('./app.js').allEnemies;
-
+const gemies = require('./app.js').gemies;
+const gem = require('./app.js').gem;
 /* Engine.js
  * This file provides the game loop functionality (update entities and render),
  * draws the initial game board on the screen, and then calls the update and
@@ -31,6 +32,7 @@ var Engine = (function(global) {
 
     canvas.width = 505;
     canvas.height = 606;
+
     doc.body.appendChild(canvas);
 
     /* This function serves as the kickoff point for the game loop itself
@@ -94,11 +96,21 @@ var Engine = (function(global) {
      * the data/properties related to the object. Do your drawing in your
      * render methods.
      */
+    var imagesGem = ["images/Gem_Green.png" , "images/Gem Orange.png" , "images/Gem Blue.png"];
     function updateEntities(dt) {
         allEnemies.forEach(function(enemy) {
             enemy.update(dt);
         });
         player.update(dt);
+
+        player.collision(allEnemies);
+        player.gemCollision(gemies);
+
+        if (gemies.length <3) {
+
+          gemies.push(new gem((80)*Math.floor((Math.random() * 5)+1),(170)*Math.floor((Math.random() * 3)+1),imagesGem[Math.floor((Math.random() *2)+1)], 52 , 118) );
+
+        }
     }
 
     /* This function initially draws the "game level", it will then call
@@ -156,6 +168,10 @@ var Engine = (function(global) {
         });
 
         player.render(ctx);
+        gemies.forEach(function(gem){
+          gem.render(ctx);
+        });
+        // gem.render(ctx);
     }
 
     /* This function does nothing but it could have been a good place to
@@ -175,7 +191,10 @@ var Engine = (function(global) {
         'images/water-block.png',
         'images/grass-block.png',
         'images/enemy-bug.png',
-        'images/char-boy.png'
+        'images/char-boy.png',
+        'images/Gem_Green.png',
+        'images/Gem Orange.png',
+        'images/Gem Blue.png'
     ]);
     Resources.onReady(init);
 
